@@ -95,5 +95,6 @@ module test;
       b=1'bz;
       $display("bit datatype_z=%b",b);
       $display("-------------------------------------------");
+      //same for short int,long int and byte
     end
 endmodule
