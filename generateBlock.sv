@@ -1,4 +1,7 @@
 ////10 bit substractor using full substractor
+//generate block is used to create multiple instances of module
+//here i have used generate for loop to create 10 instances of full substractor
+
 module half_sub(input a,b,output borrow,y);
   assign y=a^b;
   assign borrow=~a&b;
