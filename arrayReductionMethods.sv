@@ -38,3 +38,23 @@ endmodule
     end
 endmodule
 
+//////////////////
+module test;
+  int arr[5],result;
+  initial
+    begin
+      arr='{10,2,8,9,3};
+      result=arr.sum(x) with ((x>2)*x);
+      $display("result=%0d",result);
+      result=arr.sum(x) with ((x%2==0)*x);
+      $display("result=%0d",result);
+      result=arr.sum(x) with ((x%2!=0)*x);
+      $display("result=%0d",result);
+      result=arr.sum(x) with ((x%3==0)?x:0);
+      $display("result=%0d",result);
+      $display("------------------------");
+      result=arr.product() with (item/2);
+      $display("result=%0d",result);
+    end
+endmodule
+
