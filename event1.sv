@@ -4,23 +4,77 @@
 
 module test1;
   event ev,ev1,ev2;
+  task p1;
+    #1;
+    ->ev;
+    $display("triggered ev event at t=%0t",$time);
+  endtask
+  
+  task p2;
+    #5;
+    ->ev1;
+    $display("triggered ev1 event at t=%0t",$time);
+  endtask
+  
+  task p3;
+    #10;
+    ->ev2;
+    $display("triggered ev2 event at t=%0t",$time);
+  endtask
+  
+  task order_wait;
+    wait_order(ev,ev1,ev2) 
+      $display("events triggered in order at t=%0t",$time);
+    else
+      $display("events triggered out of order");
+  endtask
+  
   initial
     begin
-      ->ev;
-      $display("triggered ev event at t=%0t",$time);
-      #2;
-      ->ev1;
-      $display("triggered ev1 event at t=%0t",$time);
-      #5;
-      ->ev2;
-      $display("triggered ev2 event at t=%0t",$time);
+     fork
+       p1;
+       p2;
+       p3;
+       order_wait;
+     join
     end
+endmodule
+
+///events are not triggered in order
+module test1;
+  event ev,ev1,ev2;
+  task p1;
+    #1;
+    ->ev;
+      $display("triggered ev event at t=%0t",$time);
+  endtask
+  
+  task p2;
+    #50;
+    ->ev1;
+      $display("triggered ev1 event at t=%0t",$time);
+  endtask
+  
+  task p3;
+    #10;
+    ->ev2;
+    $display("triggered ev2 event at t=%0t",$time);
+  endtask
+  
+  task order_wait;
+    wait_order(ev,ev1,ev2) 
+      $display("events triggered in order at t=%0t",$time);
+    else
+      $display("events triggered out of order");
+  endtask
+
   initial
     begin
-      wait_order(ev1,ev,ev2) //as event triggering order is different,therefore else part will get printed on console
-      //wait_order(ev,ev1,ev2) //this will become true and event triggered in order will get printed on console
-        $display("events triggered in order");
-      else
-        $display("events triggered out of order");
+     fork
+       p1;
+       p2;
+       p3;
+       order_wait;
+     join
     end
 endmodule
